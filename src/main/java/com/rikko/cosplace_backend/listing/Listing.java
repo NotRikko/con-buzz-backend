@@ -1,8 +1,6 @@
-package com.rikko.con_buzz_backend.post;
+package com.rikko.cosplace_backend.listing;
 
-import com.rikko.con_buzz_backend.channel.Channel;
-import com.rikko.con_buzz_backend.comment.Comment;
-import com.rikko.con_buzz_backend.user.User;
+import com.rikko.cosplace_backend.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -10,27 +8,23 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(
-        name = "posts",
+        name = "listings",
         indexes = {
-                @Index(name = "idx_post_author",  columnList = "user_id"),
-                @Index(name = "idx_post_channel", columnList = "channel_id"),
-                @Index(name = "idx_post_status",  columnList = "status"),
-                @Index(name = "idx_post_created", columnList = "created_at"),
-                @Index(name = "idx_post_channel_status_created", columnList = "channel_id, status, created_at")
+                @Index(name = "idx_listing_author",  columnList = "user_id"),
+                @Index(name = "idx_listing_status",  columnList = "status"),
+                @Index(name = "idx_listing_created", columnList = "created_at"),
         }
 )
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(exclude = {"channel", "author"})
+@ToString(exclude = {"author"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Post {
+public class Listing {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -47,7 +41,7 @@ public class Post {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private PostStatus status = PostStatus.PUBLISHED;
+    private ListingStatus status = ListingStatus.PUBLISHED;
 
     // Engagement Counters
 
@@ -56,12 +50,6 @@ public class Post {
 
     @Column(nullable = false)
     private int likeCount = 0;
-
-    @Column(nullable = false)
-    private int dislikeCount = 0;
-
-    @Column(nullable = false)
-    private int commentCount = 0;
 
     // Moderation
 
@@ -77,10 +65,6 @@ public class Post {
     @JoinColumn(name = "user_id", nullable = false)
     private User author;
 
-    @ManyToOne
-    @JoinColumn(name = "channel_id", nullable = false)
-    private Channel channel;
-
     // Audit timestamps
 
     @CreatedDate
@@ -94,18 +78,14 @@ public class Post {
     @Column(name = "deleted_at")
     private Instant deletedAt;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
-
     // Factory method
 
-    public static Post create(User author, Channel channel, String title, String content) {
-        Post post    = new Post();
-        post.author  = author;
-        post.channel = channel;
-        post.title   = title;
-        post.content = content;
-        return post;
+    public static Listing create(User author, String title, String content) {
+        Listing listing = new Listing();
+        listing.author  = author;
+        listing.title   = title;
+        listing.content = content;
+        return listing;
     }
 
     // Domain behaviour
@@ -116,7 +96,7 @@ public class Post {
 
     public void softDelete() {
         this.deletedAt = Instant.now();
-        this.status    = PostStatus.DELETED;
+        this.status    = ListingStatus.DELETED;
     }
 
     public void pin()   { this.pinned = true;  }
@@ -125,8 +105,4 @@ public class Post {
     public void unlock(){ this.locked = false; }
 
     public void incrementViewCount()    { this.viewCount++;    }
-    public void incrementCommentCount() { this.commentCount++; }
-    public void decrementCommentCount() { this.commentCount = Math.max(0, this.commentCount - 1); }
-
-
 }

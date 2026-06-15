@@ -1,4 +1,4 @@
-package com.rikko.con_buzz_backend.user;
+package com.rikko.cosplace_backend.user;
 
 public enum Role {
     USER,

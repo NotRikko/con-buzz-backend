@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.rikko</groupId>
-	<artifactId>con-buzz-backend</artifactId>
+	<artifactId>cosplace-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name/>
+	<name>cosplace-backend</name>
 	<description/>
 	<url/>
 	<licenses>

@@ -1,6 +1,6 @@
-# ConBuzz Backend
+# CosPlace Backend
 
-A Spring Boot REST API for ConBuzz — a community platform for convention-goers to discuss panels, cosplay, events, and everything in between.
+A Spring Boot REST API for CosPlace — a community platform for cosplayers to view listings from other cosplayers trying to declutter their cosplay wardrobe.
 
 > Early development — domain model layer complete.
 
@@ -29,11 +29,9 @@ src/main/java/com/rikko/con_buzz_backend/
 ├── ConBuzzApplication.java
 │
 ├── user/                   # user accounts and roles
-├── convention/             # convention events that host channels
-├── channel/                # topic-based channels within a convention
-├── post/                   # posts created inside channels
-├── comment/                # comments on posts
-├── reaction/               # likes and dislikes on posts
+├── listing/                # listings created by users
+├── like/                   # likes on listings
+├── follow/                 # follows on profiles
 │
 └── shared/
     ├── config/             # Spring Security, CORS, Jackson
@@ -47,33 +45,24 @@ src/main/java/com/rikko/con_buzz_backend/
 ## Domain model
 
 ```
-Convention
-  └── Channel (many)
-        └── Post (many)
-              ├── Comment (many)
-              └── Reaction (many)
-
 User
-  ├── authored Posts
-  ├── authored Comments
-  └── authored Reactions
+  ├── authored Listings
+  └── authored Likes
 ```
 
 ### Enums
 
-| Enum | Values                          | Package |
-|---|---------------------------------|---|
-| `Role` | `USER`, `MOD`, `ADMIN`          | `user/` |
-| `PostStatus` | `PUBLISHED`, `DRAFT`, `DELETED` | `post/` |
-| `ChannelStatus` | `ACTIVE`, `ARCHIVED`            | `channel/` |
-| `ReactionType` | `LIKE`, `DISLIKE`               | `reaction/` |
+| Enum            | Values                          | Package |
+|-----------------|---------------------------------|---|
+| `Role`          | `USER`, `MOD`, `ADMIN`          | `user/` |
+| `ListingStatus` | `PUBLISHED`, `DRAFT`, `DELETED` | `listing/` |
 
 ---
 
 ## Things to work on
 
 - [ ] Repository layer — JPA repositories and custom queries for each feature
-- [ ] Service layer — business logic, reaction toggle, soft delete, lock/pin
+- [ ] Service layer — business logic, like toggle, soft delete, lock/pin
 - [ ] Controller layer — REST endpoints wired to services
 - [ ] DTO mapping — map entities to response objects
 - [ ] Auth endpoints — `/register` and `/login` returning a JWT

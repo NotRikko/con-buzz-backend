@@ -1,7 +1,6 @@
-package com.rikko.con_buzz_backend.user;
+package com.rikko.cosplace_backend.user;
 
-import com.rikko.con_buzz_backend.channel.Channel;
-import com.rikko.con_buzz_backend.post.Post;
+import com.rikko.cosplace_backend.listing.Listing;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -29,7 +28,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(exclude = {"posts", "channels"})
+@ToString(exclude = {"listings"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class User implements org.springframework.security.core.userdetails.UserDetails {
 
@@ -88,15 +87,7 @@ public class User implements org.springframework.security.core.userdetails.UserD
     // Relationships
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Post> posts = new ArrayList<>();
-
-    @ManyToMany
-    @JoinTable(
-            name = "user_channels",
-            joinColumns        = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "channel_id")
-    )
-    private List<Channel> channels = new ArrayList<>();
+    private List<Listing> listings = new ArrayList<>();
 
     // Factory method
 

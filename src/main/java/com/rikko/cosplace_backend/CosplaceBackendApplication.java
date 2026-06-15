@@ -1,13 +1,13 @@
-package com.rikko.con_buzz_backend;
+package com.rikko.cosplace_backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class ConBuzzBackendApplication {
+public class CosplaceBackendApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(ConBuzzBackendApplication.class, args);
+		SpringApplication.run(CosplaceBackendApplication.class, args);
 	}
 
 }

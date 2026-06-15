@@ -1,7 +1,7 @@
-package com.rikko.con_buzz_backend.reaction;
+package com.rikko.cosplace_backend.like;
 
-import com.rikko.con_buzz_backend.user.User;
-import com.rikko.con_buzz_backend.post.Post;
+import com.rikko.cosplace_backend.listing.Listing;
+import com.rikko.cosplace_backend.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,30 +13,26 @@ import java.time.Instant;
 @Table(
         name = "reactions",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = {"user_id", "post_id"})  // enforce one reaction per user per post
+                @UniqueConstraint(columnNames = {"user_id", "listing_id"})  // enforce one reaction per user per post
         },
         indexes = {
-                @Index(name = "idx_reaction_post", columnList = "post_id"),
-                @Index(name = "idx_reaction_user", columnList = "user_id")
+                @Index(name = "idx_like_listing", columnList = "listing_id"),
+                @Index(name = "idx_like_user", columnList = "user_id")
         }
 )
 @EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
 @NoArgsConstructor
-@ToString(exclude = {"user", "post"})
+@ToString(exclude = {"user", "listing"})
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Reaction {
+public class Like {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(updatable = false, nullable = false)
     @EqualsAndHashCode.Include
     private String id;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 10)
-    private ReactionType type;
 
     @CreatedDate
     @Column(name = "created_at", updatable = false, nullable = false)
@@ -47,16 +43,15 @@ public class Reaction {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", nullable = false)
-    private Post post;
+    @JoinColumn(name = "listing_id", nullable = false)
+    private Listing listing;
 
     // Factory Method
 
-    public static Reaction create(User user, Post post, ReactionType type) {
-        Reaction reaction = new Reaction();
-        reaction.user = user;
-        reaction.post = post;
-        reaction.type = type;
-        return reaction;
+    public static Like create(User user, Listing listing) {
+        Like like = new Like();
+        like.user = user;
+        like.listing = listing;
+        return like;
     }
 }
